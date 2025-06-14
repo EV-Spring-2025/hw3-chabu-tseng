@@ -96,6 +96,8 @@ In this part, I construct two baseline configurations using the **PhysGaussian**
 ### Plasticine Baseline
 <img src="./resource/plasticine_baseline.gif" width="400"/>
 
+![Plasticine Baseline](./resource/plasticine_baseline.gif)
+
 The plasticine material is modeled as a relatively soft, dissipative medium. The following parameters were chosen:
 
 ```json
@@ -144,28 +146,15 @@ Defines the spatial resolution of the simulation grid. Higher values improve pre
 - `40`
 - `48` (baseline)
 
-<p align="center">
-  <figure style="display:inline-block; margin:10px; text-align:center;">
-    <img src="./resource/plasticine_n_grid24.gif" width="150"/>
-    <figcaption>n_grid = 24</figcaption>
-  </figure>
-  <figure style="display:inline-block; margin:10px; text-align:center;">
-    <img src="./resource/plasticine_n_grid28.gif" width="150"/>
-    <figcaption>n_grid = 28</figcaption>
-  </figure>
-  <figure style="display:inline-block; margin:10px; text-align:center;">
-    <img src="./resource/plasticine_n_grid32.gif" width="150"/>
-    <figcaption>n_grid = 32</figcaption>
-  </figure>
-  <figure style="display:inline-block; margin:10px; text-align:center;">
-    <img src="./resource/plasticine_n_grid40.gif" width="150"/>
-    <figcaption>n_grid = 40</figcaption>
-  </figure>
-  <figure style="display:inline-block; margin:10px; text-align:center;">
-    <img src="./resource/plasticine_n_grid48.gif" width="150"/>
-    <figcaption>n_grid = 48 (baseline)</figcaption>
-  </figure>
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="./resource/plasticine_n_grid24.gif" width="150"/><br/>n_grid = 24</td>
+    <td align="center"><img src="./resource/plasticine_n_grid28.gif" width="150"/><br/>n_grid = 28</td>
+    <td align="center"><img src="./resource/plasticine_n_grid32.gif" width="150"/><br/>n_grid = 32</td>
+    <td align="center"><img src="./resource/plasticine_n_grid40.gif" width="150"/><br/>n_grid = 40</td>
+    <td align="center"><img src="./resource/plasticine_n_grid48.gif" width="150"/><br/>n_grid = 48 (baseline)</td>
+  </tr>
+</table>
 
 
 #### 2. `substep_dt` – Simulation Substep Size
