@@ -155,7 +155,7 @@ Defines the spatial resolution of the simulation grid. Higher values improve pre
   </tr>
 </table>
 
-![Plasticine n_grad lineplot](./resource/plastician_n_grid_psnr_lineplot.png)
+![Plasticine n_grad lineplot](./resource/n_grid_psnr_lineplot.png)
 
 ### Effect of `n_grid` on PSNR and Simulation Dynamics
 
@@ -184,7 +184,7 @@ Controls the time step for each subframe. Smaller values improve numerical stabi
   </tr>
 </table>
 
-![Plasticine substep_dt lineplot](./resource/plastician_substep_psnr_lineplot.png)
+![Plasticine substep_dt lineplot](./resource/substep_psnr_lineplot.png)
 
 ### Effect of `substep_dt` on PSNR and Motion Scale
 
@@ -216,7 +216,7 @@ Determines how much the velocity field is damped each step. Lower values add str
   </tr>
 </table>
 
-![Plasticine substep_dt lineplot](./resource/plastician_grid_v_damping_psnr_lineplot.png)
+![Plasticine substep_dt lineplot](./resource/grid_v_damping_psnr_lineplot.png)
 
 ### Effect of `grid_v_damping_scale` on PSNR and Motion Persistence
 
@@ -253,7 +253,7 @@ Prevents numerical instability from hard contacts by smoothing interactions. Hig
   </tr>
 </table>
 
-![Plasticine substep_dt lineplot](./resource/plastician_softening_psnr_lineplot.png)
+![Plasticine substep_dt lineplot](./resource/softening_psnr_lineplot.png)
 
 ### Effect of `softening` on PSNR and Contact Behavior
 
