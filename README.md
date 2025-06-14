@@ -95,6 +95,7 @@ In this part, I construct two baseline configurations using the **PhysGaussian**
 
 ### Plasticine Baseline
 <img src="./resource/plasticine_baseline.gif" width="400"/>
+
 ![Plasticine Baseline](./resource/plasticine_baseline.gif)
 
 The plasticine material is modeled as a relatively soft, dissipative medium. The following parameters were chosen:
