@@ -187,7 +187,7 @@ Prevents numerical instability from hard contacts by smoothing interactions. Hig
 - `1e-3`
 - `2e-3`
 - `5e-3`
-- `1e-2` (baseline)
+- `1e-2` 
 
 
 # Reference
