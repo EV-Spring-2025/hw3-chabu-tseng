@@ -96,7 +96,6 @@ In this part, I construct two baseline configurations using the **PhysGaussian**
 ### Plasticine Baseline
 <img src="./resource/plasticine_baseline.gif" width="400"/>
 
-![Plasticine Baseline](./resource/plasticine_baseline.gif)
 
 The plasticine material is modeled as a relatively soft, dissipative medium. The following parameters were chosen:
 
@@ -152,10 +151,19 @@ Defines the spatial resolution of the simulation grid. Higher values improve pre
     <td align="center"><img src="./resource/plasticine_n_grid28.gif" width="150"/><br/>n_grid = 28</td>
     <td align="center"><img src="./resource/plasticine_n_grid32.gif" width="150"/><br/>n_grid = 32</td>
     <td align="center"><img src="./resource/plasticine_n_grid40.gif" width="150"/><br/>n_grid = 40</td>
-    <td align="center"><img src="./resource/plasticine_n_grid48.gif" width="150"/><br/>n_grid = 48 (baseline)</td>
+    <td align="center"><img src="./resource/plasticine_n_grid48.gif" width="150"/><br/>n_grid = 48 </td>
   </tr>
 </table>
 
+![Plasticine n_grad lineplot](./resource/plastician_n_grid_psnr_lineplot.png)
+
+### Effect of `n_grid` on PSNR and Simulation Dynamics
+
+In this experiment, the baseline was set to `n_grid = 48`, which captures more detailed collisions and physical interactions. As a result, other configurations with lower `n_grid` (e.g., 24–40) show much lower PSNR, not because they are unstable, but because their outputs visually differ from the high-resolution baseline.
+
+Higher `n_grid` increases physical realism but may reduce PSNR due to more complex motion. Lower `n_grid` yields smoother, simpler results that differ from the baseline, resulting in lower visual similarity scores.
+
+This shows that **PSNR is sensitive to physical resolution** and may not fully reflect simulation quality when comparing across grid settings.
 
 #### 2. `substep_dt` – Simulation Substep Size
 Controls the time step for each subframe. Smaller values improve numerical stability, while larger values reduce runtime.
@@ -163,9 +171,29 @@ Controls the time step for each subframe. Smaller values improve numerical stabi
 **Tested values:**
 
 - `1e-5`
-- `5e-6`
-- `2e-5`
+- `5e-5`
+- `7e-5`
 - `1e-4` (baseline)
+
+<table>
+  <tr>
+    <td align="center"><img src="./resource/plasticine_substep_dt0p0001.gif" width="150"/><br/>substep_dt = 1e-4</td>
+    <td align="center"><img src="./resource/plasticine_substep_dt0p1em05.gif" width="150"/><br/>substep_dt = 1e-5</td>
+    <td align="center"><img src="./resource/plasticine_substep_dt5em05.gif" width="150"/><br/>substep_dt = 5e-5</td>
+    <td align="center"><img src="./resource/plasticine_substep_dt7em05.gif" width="150"/><br/>substep_dt = 7e-5</td>
+  </tr>
+</table>
+
+![Plasticine substep_dt lineplot](./resource/plastician_substep_psnr_lineplot.png)
+
+### Effect of `substep_dt` on PSNR and Motion Scale
+
+This plot shows the PSNR for different values of `substep_dt`. The baseline uses `substep_dt = 1e-4`, which allows finer time resolution. Compared to that, other settings with larger `substep_dt` (e.g., `5e-5`, `7e-5`, `1e-4`) result in consistently lower PSNR.
+
+One reason is that **smaller `substep_dt` leads to smaller per-frame motion**, which accumulates more slowly and stays closer to the baseline. With larger `substep_dt`, motion per frame becomes more aggressive, deviating faster from the baseline and lowering PSNR.
+
+This is because in MPM solvers, each substep applies physical forces (like gravity, contact, internal stress) to particles. **A larger time step integrates more force at once**, resulting in more displacement per step. Conversely, **smaller `substep_dt` leads to finer, more stable updates**, which better preserve physical details across frames.
+
 
 #### 3. `grid_v_damping_scale` – Velocity Damping Factor
 Determines how much the velocity field is damped each step. Lower values add strong dissipation; higher values preserve momentum.
@@ -178,16 +206,69 @@ Determines how much the velocity field is damped each step. Lower values add str
 - `0.9999` (baseline)
 - `1.5`
 
+<table>
+  <tr>
+    <td align="center"><img src="./resource/plasticine_grid_v_damping_scale0p1.gif" width="150"/><br/>0.1000</td>
+    <td align="center"><img src="./resource/plasticine_grid_v_damping_scale0p5.gif" width="150"/><br/>0.5000</td>
+    <td align="center"><img src="./resource/plasticine_grid_v_damping_scale0p7.gif" width="150"/><br/>0.7000</td>
+    <td align="center"><img src="./resource/plasticine_grid_v_damping_scale0p9999.gif" width="150"/><br/>0.9999</td>
+    <td align="center"><img src="./resource/plasticine_grid_v_damping_scale1p5.gif" width="150"/><br/>1.5000</td>
+  </tr>
+</table>
+
+![Plasticine substep_dt lineplot](./resource/plastician_grid_v_damping_psnr_lineplot.png)
+
+### Effect of `grid_v_damping_scale` on PSNR and Motion Persistence
+
+This plot shows the PSNR for different values of `grid_v_damping_scale`. The baseline uses `grid_v_damping_scale = 0.9999`, which lightly damps the grid velocity and allows realistic momentum preservation. Settings with smaller damping factors (e.g., `0.1`, `0.5`, `0.7`) result in significantly lower PSNR.
+
+One reason is that **lower `grid_v_damping_scale` suppresses velocity too aggressively**, causing particles to slow down unnaturally and settle too early. This divergence from the baseline becomes evident quickly, especially in long simulations, and results in a sharp drop in PSNR.
+
+In contrast, **higher damping values like `0.9999` and `1.5` maintain velocity longer**, allowing particles to follow natural trajectories over time. The differences accumulate slowly, so PSNR remains high across most frames.
+
+This happens because in MPM solvers, grid velocity updates directly influence particle advection. **Stronger damping truncates motion**, removing energy from the system too soon. **Weaker damping (values near or slightly above 1)** helps preserve the intended motion, resulting in smoother, more physically consistent simulations.
+
+
+
 #### 4. `softening` – Particle Interaction Softening
 Prevents numerical instability from hard contacts by smoothing interactions. Higher values reduce stiffness.
 
 **Tested values:**
 
-- `1e-5`
-- `1e-3`
-- `2e-3`
-- `5e-3`
-- `1e-2` 
+- `0.0001`
+- `0.001`
+- `0.005`
+- `0.01`(baseline)
+- `0.02` 
+- `0.05`
+
+<table>
+  <tr>
+    <td align="center"><img src="./resource/plasticine_softening0p0001.gif" width="150"/><br/>softening = 1e-4</td>
+    <td align="center"><img src="./resource/plasticine_softening0p001.gif" width="150"/><br/>softening = 1e-3</td>
+    <td align="center"><img src="./resource/plasticine_softening0p005.gif" width="150"/><br/>softening = 5e-3</td>
+    <td align="center"><img src="./resource/plasticine_softening0p01.gif" width="150"/><br/>softening = 1e-2</td>
+    <td align="center"><img src="./resource/plasticine_softening0p02.gif" width="150"/><br/>softening = 2e-2</td>
+    <td align="center"><img src="./resource/plasticine_softening0p05.gif" width="150"/><br/>softening = 5e-2</td>
+  </tr>
+</table>
+
+![Plasticine substep_dt lineplot](./resource/plastician_softening_psnr_lineplot.png)
+
+### Effect of `softening` on PSNR and Contact Behavior
+
+This plot shows the frame-wise PSNR for different values of `softening` in the plasticine simulation. The baseline uses `softening = 1e-2`, and the tested range includes values from `1e-5` to `5e-2`.
+
+Overall, **the variation in PSNR across different softening values is relatively minor** throughout the simulation. All settings maintain a similar trend, with PSNR gradually decreasing over time as the simulation diverges from the baseline.
+
+While the PSNR differences are small, we observe that:
+
+- **Very large softening values** (e.g., `0.02`, `0.05`) tend to lead to a slightly faster PSNR decline in later frames.
+- This may be due to **over-smoothing of particle contacts**, where softening reduces stress concentrations and makes the material behave more fluid-like.
+- **Smaller softening values** (e.g., `0.001`, `0.005`) tend to better preserve the baseline shape and structure, maintaining marginally higher PSNR.
+
+In conclusion, `softening` primarily affects **contact stiffness and shape retention**, but its impact on PSNR is subtle. Visual differences may still be noticeable (e.g., in deformation or sticking behavior), even if PSNR remains similar.
+
 
 
 # Reference
